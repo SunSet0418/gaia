@@ -335,7 +335,11 @@ func (a appCreator) newApp(
 	chainID := cast.ToString(appOpts.Get(flags.FlagChainID))
 	if chainID == "" {
 		// fallback to genesis chain-id
-		genDocFile := filepath.Join(homeDir, cast.ToString(appOpts.Get("genesis_file")))
+		genDocFile := cast.ToString(appOpts.Get("genesis_file"))
+		if !filepath.IsAbs(genDocFile) {
+			genDocFile = filepath.Join(homeDir, genDocFile)
+		}
+
 		appGenesis, err := genutiltypes.AppGenesisFromFile(genDocFile)
 		if err != nil {
 			panic(err)
